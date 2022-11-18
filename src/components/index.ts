@@ -1,2 +1,4 @@
-export * from './header'
-export * from './orders'
+export * from './Header'
+export * from './Orders'
+export * from './OrdersBoard'
+export * from './OrderModal'
