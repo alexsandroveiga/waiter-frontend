@@ -9,11 +9,12 @@ interface OrderModalProps {
   visible: boolean;
   order: Order | null;
   onClose: () => void;
+  onCancelOrder: () => Promise<void>
+  isLoading: boolean
+  onChangeOrderStatus: () => void
 }
 
-export function OrderModal(props: OrderModalProps) {
-  const {visible, order, onClose} = props;
-
+export function OrderModal({ visible, order, onClose, onCancelOrder, isLoading, onChangeOrderStatus }: OrderModalProps) {
   if (!visible || !order) {
     return null;
   }
@@ -91,21 +92,22 @@ export function OrderModal(props: OrderModalProps) {
         </OrderDetail>
 
         <Actions>
-          <button type="button" className='primary'>
-            <span>
-              {order.status === 'WAITING' && '👨‍🍳'}
-              {order.status === 'IN_PRODUCTION' && '✅'}
-            </span>
-            <span>
-              {order.status === 'WAITING' && 'Iniciar Produção'}
-              {order.status === 'IN_PRODUCTION' && 'Concluir Pedido!'}
-            </span>
-          </button>
+          {order.status !== 'DONE' && (
+            <button type="button" className='primary' disabled={isLoading} onClick={onChangeOrderStatus}>
+              <span>
+                {order.status === 'WAITING' && '👨‍🍳'}
+                {order.status === 'IN_PRODUCTION' && '✅'}
+              </span>
+              <strong>
+                {order.status === 'WAITING' && 'Iniciar Produção'}
+                {order.status === 'IN_PRODUCTION' && 'Concluir Pedido'}
+              </strong>
+            </button>
+          )}
 
-          {order.status !== 'DONE' &&
-          <button type="button" className='secondary'>
-            <span>Cancelar</span>
-          </button>}
+          <button type="button" className='secondary' onClick={onCancelOrder} disabled={isLoading}>
+            <span>Cancelar Pedido</span>
+          </button>
         </Actions>
 
       </ModalBody>
